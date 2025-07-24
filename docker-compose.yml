@@ -25,8 +25,11 @@ services:
       volumes:
           - .:/application
           - ./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-      ports:
-       - "7001:80"
+      labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.sesdashboard.rule=Host(`admin.salleprivee.ca`)"
+          - "traefik.http.routers.sesdashboard.entrypoints=web"
+          - "traefik.http.services.sesdashboard.loadbalancer.server.port=80"
 
     php-fpm:
       restart: unless-stopped
