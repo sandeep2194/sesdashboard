@@ -3,7 +3,6 @@
 ###############################################################################
 version: "3.1"
 services:
-
     mysql:
       restart: unless-stopped
       env_file:
@@ -26,10 +25,12 @@ services:
           - .:/application
           - ./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
       labels:
-          - "traefik.enable=true"
-          - "traefik.http.routers.sesdashboard.rule=Host(`admin.salleprivee.ca`)"
-          - "traefik.http.routers.sesdashboard.entrypoints=web"
-          - "traefik.http.services.sesdashboard.loadbalancer.server.port=80"
+        - "traefik.enable=true"
+      - "traefik.http.routers.sesdashboard.rule=Host(`sesdashboard.salleprivee.ca`)"
+      - "traefik.http.routers.sesdashboard.entrypoints=websecure"
+      - "traefik.http.routers.sesdashboard.tls.certresolver=letsencrypt"
+      - "traefik.docker.network=dokploy"
+      - "traefik.http.services.sesdashboard.loadbalancer.server.port=80"
 
     php-fpm:
       restart: unless-stopped
